@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+   <link rel="stylesheet" href="static/styles.css">
+     <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.rtl.min.css" integrity="sha384-OXTEbYDqaX2ZY/BOaZV/yFGChYHtrXH2nyXJ372n2Y8abBhrqacCEe+3qhSHtLjy" crossorigin="anonymous">
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css' rel='stylesheet'>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script type="text/javascript" src="'js/myfile.js'"></script>
+</head>
+
+<body>
+
+<h1>Memory</h1>
+<div class="desk">
+
+    <p><button type="button" onclick="nyttSpel()" class="btn btn-primary" style="background-color:darkblue ">Nytt spel</button></p>
+    <p id="antal">Antal försök: </p>
+    <p id="sec">Tid: </p>
+    </div>
+
+
+<table onclick="myFunction()" class = "center" id= "tab" style="width:50%">
+
+    <tbody>
+     <tr>
+         <td id="0">{{shuffled_bilder[0]}}</td>
+         <td id="1">{{shuffled_bilder[1]}}</td>
+         <td id="2">{{shuffled_bilder[2]}}</td>
+         <td id="3">{{shuffled_bilder[3]}}</td>
+    </tr>
+     <tr>
+         <td id="4">{{shuffled_bilder[4]}}</td>
+         <td id="5">{{shuffled_bilder[5]}}</td>
+         <td id="6">{{shuffled_bilder[6]}}</td>
+         <td id="7">{{shuffled_bilder[7]}}</td>
+    </tr>
+    <tr>
+         <td id="8">{{shuffled_bilder[8]}}</td>
+         <td id="9">{{shuffled_bilder[9]}}</td>
+         <td id="10">{{shuffled_bilder[10]}}</td>
+         <td id="11">{{shuffled_bilder[11]}}</td>
+    </tr>
+    <tr>
+         <td id="12">{{shuffled_bilder[12]}}</td>
+         <td id="13">{{shuffled_bilder[13]}}</td>
+         <td id="14">{{shuffled_bilder[14]}}</td>
+         <td id="15">{{shuffled_bilder[15]}}</td>
+    </tr>
+
+   </tbody>
+
+</table>
+
+
+
+</body>
+
+<style>
+
+.desk {
+    text-align: center;
+
+}
+body {
+background: #F0F8FF;
+}
+
+p {
+
+text-align: center;
+display: inline-block;
+font-size: 20px;
+padding: 20px;
+color: darkblue;
+
+}
+
+h1{
+color: darkblue;
+font-size: 40px;
+text-align: center;
+
+}
+
+table.center {
+
+  margin-left: auto;
+  margin-right: auto;
+}
+table {
+
+  border-collapse: collapse;
+  border: 2px solid darkblue;
+}
+
+td{
+  height: 150px;
+  width: 60px;
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+  font-size: 100px;
+  background-color: darkblue;
+  color: transparent;
+
+  }
+
+
+
+</style>
+
+
+<script language="javascript">
+  var test = []
+  var id = []
+  var ant = 0
+  var match = 0
+
+  var antal = 0
+  var startTime
+  var endTime
+  var seconds
+
+  start();
+
+ function nyttSpel() {
+      document.location.href="/";
+    }
+
+  function myFunction() {
+
+       var tbl = document.getElementById("tab");
+
+        if (tbl != null) {
+            for (var i = 0; i < tbl.rows.length; i++) {
+                for (var j = 0; j < tbl.rows[i].cells.length; j++)
+
+                    tbl.rows[i].cells[j].onclick = function () { getval(this); };
+            }
+           }
+
+        function flip_back(id1, id2) {
+
+             document.getElementById(id1).style.backgroundColor= "darkblue";
+             document.getElementById(id1).style.color= "transparent";
+             document.getElementById(id2).style.backgroundColor= "darkblue";
+             document.getElementById(id2).style.color= "transparent";
+      };
+
+        function getval(cel) {
+
+            document.getElementById(cel.id).style.backgroundColor= "white";
+            document.getElementById(cel.id).style.color= "black";
+
+            val1=cel.innerHTML;
+            id1=cel.id;
+
+            ant++;
+            antal++;
+            document.getElementById('antal').innerHTML ='Antal försök: ' + antal;
+
+            test.push(val1);
+            id.push(id1);
+
+                if (ant === 2) {
+
+                  ant = 0;
+                  setTimeout(check, 1000, test[0],test[1]);
+             }
+};
+
+         function check(a,b) {
+
+               if (a === b){
+
+                   match++;
+                   test.splice(0, 2);
+                   id.splice(0, 2);
+
+
+                }else {
+                    a !== b;
+
+                    flip_back(id[0],id[1]);
+
+                    test.splice(0, 2);
+                    id.splice(0, 2);
+                 }
+         if (match === 8) {
+            stop();
+            shuffled_bilder = [];
+            match=0;
+            antal=0;
+
+            }
+       }
+   };
+
+function confirm_action(sec) {
+   document.getElementById('sec').innerHTML = "Tid: " +sec;
+  let confirmAction = confirm("Vill du starta nytt spel?");
+
+        if (confirmAction) {
+          alert("Startar nytt spel!");
+          document.location.href="/";
+        } else {
+          alert("Spel avslutas!");
+        }
+    }
+
+function start() {
+  startTime = new Date();
+
+};
+
+function stop() {
+
+  endTime = new Date();
+  var timeDiff = endTime - startTime;
+  timeDiff /= 1000;
+  var seconds = Math.round(timeDiff);
+
+  var minutes = Math.floor(seconds / 60);
+  var sec = seconds - minutes * 60;
+
+  document.getElementById('sec').innerHTML = "Tid: " + minutes + " min "  +  sec +" sek ";
+
+};
+
+
+    </script>
+</html>
+
+
+
+
+
